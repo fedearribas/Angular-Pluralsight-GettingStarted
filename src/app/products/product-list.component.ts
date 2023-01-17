@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IProduct } from "./product";
+import { ProductService } from "./product.service";
 
 @Component({
     selector: 'pm-products',
@@ -8,6 +9,10 @@ import { IProduct } from "./product";
 })
 
 export class ProductListComponent implements OnInit {
+
+    constructor(private productService: ProductService) {
+        
+    }
    
     pageTitle: string = 'Product List';
     imageWidth: number = 50;
@@ -26,38 +31,7 @@ export class ProductListComponent implements OnInit {
     }
 
     filteredProducts: IProduct[] = [];
-    products: IProduct[] = [
-        {
-            "productId": 1,
-            "productName": "Leaf Rake",
-            "productCode": "GDN-0011",
-            "releaseDate": "March 19, 2021",
-            "description": "Leaf rake with 48-inch wooden handle.",
-            "price": 19.95,
-            "starRating": 3.2,
-            "imageUrl": "assets/images/leaf_rake.png"
-          },
-          {
-            "productId": 2,
-            "productName": "Garden Cart",
-            "productCode": "GDN-0023",
-            "releaseDate": "March 18, 2021",
-            "description": "15 gallon capacity rolling garden cart",
-            "price": 32.99,
-            "starRating": 4.2,
-            "imageUrl": "assets/images/garden_cart.png"
-          },
-          {
-            "productId": 5,
-            "productName": "Hammer",
-            "productCode": "TBX-0048",
-            "releaseDate": "May 21, 2021",
-            "description": "Curved claw steel hammer",
-            "price": 8.9,
-            "starRating": 4.8,
-            "imageUrl": "assets/images/hammer.png"
-          }
-    ];
+    products: IProduct[] = [];
 
     performFilter(): IProduct[] {
         return this.products.filter(x => x.productName.toLowerCase().includes(this.listFilter.toLowerCase()));
@@ -68,7 +42,12 @@ export class ProductListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.listFilter = 'cart';
-        console.log('In OnInit');
+        this.products = this.productService.getProducts();
+        this.filteredProducts = this.products;
     }
+
+    onRatingClicked(value: string): void {
+        this.pageTitle = 'Product List: ' + value;
+    }
+
 }
